@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context
+			http://www.springframework.org/schema/context/spring-context-3.0.xsd
+			http://www.springframework.org/schema/jee
+			http://www.springframework.org/schema/jee/spring-jee-3.0.xsd
+			http://www.springframework.org/schema/tx
+			http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+			http://www.springframework.org/schema/aop
+			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+			http://www.springframework.org/schema/task
+			http://www.springframework.org/schema/task/spring-task-3.0.xsd
+			http://www.springframework.org/schema/mvc
+			http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+	<bean id="keyStoreHandler"
+		class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+		<property name="trustStore" ref="trustStore" />
+	</bean>
+	<bean id="trustStore"
+		class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+		<property name="location" value="classpath:keystore.jks" />
+		<property name="password" value="changeit" />
+	</bean>
+
+
+	<bean id="keyStoreHandler"
+		class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+		<property name="keyStore" ref="keyStore" />
+		<property name="privateKeyPassword" value="asdfff" />
+	</bean>
+	<bean id="keyStore"
+		class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+		<property name="location" value="classpath:keystore.jks" />
+		<property name="password" value="asdfff" />
+	</bean>
+
+	<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+		<xwss:RequireUsernameToken passwordDigestRequired="false" nonceRequired="false"/>
+	</xwss:SecurityConfiguration>
+	
+	<bean id="passwordValidationHandler"
+    class="org.springframework.ws.soap.security.xwss.callback.SimplePasswordValidationCallbackHandler">
+    <property name="users">
+        <props>
+            <prop key="kevin">asdfff</prop>
+        </props>
+    </property>
+	</bean>
+	
+	<!--  
+	<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config">
+		<xwss:RequireUsernameToken
+			passwordDigestRequired="true" nonceRequired="true" />
+		<xwss:RequireSignature requireTimestamp="false"/>
+		<xwss:Sign includeTimestamp="false" />
+		<xwss:RequireEncryption />
+		<xwss:Encrypt />
+	</xwss:SecurityConfiguration>
+	
+	<bean class="org.springframework.ws.soap.security.xwss.callback.SpringDigestPasswordValidationCallbackHandler">
+        <property name="userDetailsService" ref="userDetailsService"/>
+    </bean>
+    <bean id="userDetailsService" class="com.mycompany.app.dao.UserDetailService" />
+	-->
+</beans>
